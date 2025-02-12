@@ -26,7 +26,7 @@
 
 - (AI) 실시간 경로 조정을 위한 강화학습: PyTorch, Tensorflow
 
-- DB: MySQL
+- DB: MySQL()
 
 - 서버: Spring Boot
 
@@ -41,11 +41,15 @@
 
 - 데이터 흐름
 
+  - [Canva Link](https://www.canva.com/design/DAGe4qcUVzM/9yD7shNlYk-8l3d44qNUvQ/view?utm_content=DAGe4qcUVzM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h13892caa96)
+
 
 ## 인터페이스
 
 
-## 필요 데이터 및 보안
+## 데이터 및 보안
+
+- DB Scheme(추가 요망)
 
 
 ## 개발 일정 및 역할 분담
