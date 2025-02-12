@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{enteringShip.add.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{enteringShip.add.headline}]]</h1>
+                <div>
+                    <a th:href="@{/enteringShips}" class="btn btn-secondary">[[#{enteringShip.add.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('enteringShip')}" />
+            <form th:action="${requestUri}" method="post" novalidate="">
+                <div th:replace="~{fragments/forms::inputRow(object='enteringShip', field='shipSeqId', required=true, type='select')}" />
+                <input type="submit" th:value="#{enteringShip.add.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

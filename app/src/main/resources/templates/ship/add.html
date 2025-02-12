@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{ship.add.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{ship.add.headline}]]</h1>
+                <div>
+                    <a th:href="@{/ships}" class="btn btn-secondary">[[#{ship.add.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('ship')}" />
+            <form th:action="${requestUri}" method="post" novalidate="">
+                <div th:replace="~{fragments/forms::inputRow(object='ship', field='iMONumber', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='ship', field='name', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='ship', field='width', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='ship', field='height', required=true)}" />
+                <input type="submit" th:value="#{ship.add.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

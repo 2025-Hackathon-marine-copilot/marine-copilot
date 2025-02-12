@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{ship.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{ship.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/ships/add}" class="btn btn-primary ms-2">[[#{ship.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${ships.empty}">[[#{ship.list.empty}]]</div>
+            <div th:if="${!ships.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{ship.shipSeqId.label}]]</th>
+                            <th scope="col">[[#{ship.iMONumber.label}]]</th>
+                            <th scope="col">[[#{ship.name.label}]]</th>
+                            <th scope="col">[[#{ship.width.label}]]</th>
+                            <th scope="col">[[#{ship.height.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ship : ${ships}">
+                            <td>[[${ship.shipSeqId}]]</td>
+                            <td>[[${ship.iMONumber}]]</td>
+                            <td>[[${ship.name}]]</td>
+                            <td>[[${ship.width}]]</td>
+                            <td>[[${ship.height}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/ships/edit/{shipSeqId}(shipSeqId=${ship.shipSeqId})}" class="btn btn-sm btn-secondary">[[#{ship.list.edit}]]</a>
+                                    <form th:action="@{/ships/delete/{shipSeqId}(shipSeqId=${ship.shipSeqId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{ship.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
