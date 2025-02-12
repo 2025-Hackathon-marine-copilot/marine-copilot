@@ -24,13 +24,13 @@
 
 - 모바일 환경을 지원하는 웹 기반 시스템
 
-- (AI) 실시간 경로 조정을 위한 강화학습: PyTorch, Tensorflow
+- AI 강화학습: PyTorch, Tensorflow
 
-- DB: MySQL()
+- DB: MySQL
 
 - 서버: Spring Boot
 
-- 클라이언트: Vanilla JS
+- 클라이언트: Vanilla.js, OpenSeaMap API / Leaflet.js
 
 - 기타 필요한 라이브러리...
 
