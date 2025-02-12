@@ -1,14 +1,14 @@
 spring:
   datasource:
     url: ${JDBC_DATABASE_URL:jdbc:mysql://localhost:3306/app?serverTimezone=UTC}
-    username: ${JDBC_DATABASE_USERNAME:root}
-    password: ${JDBC_DATABASE_PASSWORD:<<YOUR_PASSWORD>>}
+    username: root
+    password: 1234
     hikari:
       connection-timeout: 30000
       maximum-pool-size: 10
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     open-in-view: false
     properties:
       hibernate:
