@@ -26,11 +26,9 @@
 
 - AI 강화학습: PyTorch, Tensorflow
 
-- DB: MySQL
-
 - 서버: Spring Boot
 
-- 클라이언트: Vanilla.js, OpenSeaMap API / Leaflet.js
+- 클라이언트: OpenSeaMap API / Leaflet.js
 
 - 기타 필요한 라이브러리...
 
@@ -48,8 +46,6 @@
 
 
 ## 데이터 및 보안
-
-- DB Scheme(추가 요망)
 
 
 ## 개발 일정 및 역할 분담
