@@ -30,30 +30,29 @@
     var shipName = "[[${shipName}]]";
 
     // 1. 지도 초기화
-    const map = L.map('map').setView([shipLatitude, shipLongitude], 12); // 부산항 주변 중심 좌표
+    const map = L.map('map').setView([shipLatitude, shipLongitude], 10); // 선박 위치로 중심 확대
 
     // 2. OpenSeaMap 타일 레이어 설정
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // 선박 위치 마커 추가
+    // 3. 선박 위치 마커 추가 및 지도 중심 확대
     const shipMarker = L.marker([shipLatitude, shipLongitude]).addTo(map)
         .bindPopup(`<b>선박: ${shipName}</b><br>위도: ${shipLatitude}<br>경도: ${shipLongitude}`)
         .openPopup();
 
-    // 3. 경로 설정 (예: 부산항에서 인근 선박 경로)
+    // 📌 추가: 지도 중심을 선박 위치로 부드럽게 확대 이동
+    map.flyTo([shipLatitude, shipLongitude], 14, { duration: 1.5 });
+
+    // 4. 경로 설정 (예: 부산항에서 인근 선박 경로)
     const route = [
-        [35.0651, 129.0330], // 부산항 출발지
-        [35.0700, 129.0450], // 인근 경유지
-        [35.0800, 129.0600]  // 도착지
+        [35.07960082044156, 129.09467697143558],
+        [35.10095096169263, 129.12197113037112]
     ];
 
-    // 4. 경로를 지도에 표시
+    // 5. 경로를 지도에 표시
     const polyline = L.polyline(route, { color: 'blue' }).addTo(map);
-
-    // 5. 경로 확대
-    map.fitBounds(polyline.getBounds());
 
     // 6. 더블 클릭 이벤트 처리
     map.on('dblclick', function(event) {
@@ -74,5 +73,6 @@
         L.marker([lat, lng], { icon: redIcon }).addTo(map).bindPopup(`위도: ${lat}, 경도: ${lng}`);
     });
 </script>
+
 </body>
 </html>

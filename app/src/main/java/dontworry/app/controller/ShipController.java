@@ -3,6 +3,7 @@ package dontworry.app.controller;
 import dontworry.app.domain.CurrentShip;
 import dontworry.app.model.ShipCreateForm;
 import dontworry.app.model.ShipDTO;
+import dontworry.app.myclass.RandomCoordinateGenerator;
 import dontworry.app.service.ShipService;
 import dontworry.app.util.ReferencedWarning;
 import dontworry.app.util.WebUtils;
@@ -106,9 +107,10 @@ public class ShipController {
             return "shipEnrollment/ship_enroll_form";
         }
 
-        double latitude = 35.10928444126909;  //부산항 주변
-        double longitude = 129.06611851298135;
-        CurrentShip currentShip = new CurrentShip(shipCreateForm.getShipName(), latitude, longitude);
+        RandomCoordinateGenerator randomCoordinateGenerator = new RandomCoordinateGenerator();
+        double[] randomCoord = randomCoordinateGenerator.getRandomCoordinate();
+
+        CurrentShip currentShip = new CurrentShip(shipCreateForm.getShipName(), randomCoord[0], randomCoord[1]);
         redirectAttributes.addFlashAttribute("currentShip", currentShip);
 
         return "redirect:/map";
