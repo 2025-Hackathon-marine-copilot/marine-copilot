@@ -1,10 +1,7 @@
 package dontworry.app.myclass;
 
-import lombok.Getter;
-
 import java.util.Random;
 
-@Getter
 public class RandomCoordinateGenerator {
     double lat1 = 35.08346392459766, lng1 = 129.094934463501;
     double lat2 = 35.08806429179801, lng2 = 129.1026592254639;
