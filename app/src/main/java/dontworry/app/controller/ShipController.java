@@ -1,5 +1,6 @@
 package dontworry.app.controller;
 
+import dontworry.app.domain.CurrentShip;
 import dontworry.app.model.ShipCreateForm;
 import dontworry.app.model.ShipDTO;
 import dontworry.app.service.ShipService;
@@ -88,7 +89,7 @@ public class ShipController {
     }
 
     @PostMapping("/enroll")
-    public String enroll(@Valid ShipCreateForm shipCreateForm, BindingResult bindingResult){
+    public String enroll(@Valid ShipCreateForm shipCreateForm, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
             return "initial/initial_page";
         }
@@ -105,6 +106,11 @@ public class ShipController {
             return "shipEnrollment/ship_enroll_form";
         }
 
-        return "redirect:/";
+        double latitude = 35.10928444126909;  //부산항 주변
+        double longitude = 129.06611851298135;
+        CurrentShip currentShip = new CurrentShip(shipCreateForm.getShipName(), latitude, longitude);
+        redirectAttributes.addFlashAttribute("currentShip", currentShip);
+
+        return "redirect:/map";
     }
 }
