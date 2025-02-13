@@ -7,9 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/admin")
     public String index() {
         return "home/index";
     }
 
+    @GetMapping("/")
+    public String shipInformationTransmission(){
+        return "initial/initial_page";
+    }
 }

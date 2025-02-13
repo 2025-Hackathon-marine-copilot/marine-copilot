@@ -1,0 +1,8 @@
+<!-- /src/main/resources/templates/form_errors.html -->
+<div th:fragment="formErrorsFragment">
+    <div th:if="${#fields.hasErrors('*')}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-3">
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</div>
