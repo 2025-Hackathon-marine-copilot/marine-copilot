@@ -1,31 +1,46 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>OpenSeaMap Test</title>
-
+    <title>OpenSeaMap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
     <style>
         #map { height: 600px; }
     </style>
 </head>
-<body>
-<div id="map"></div>
+<body class="flex flex-col items-center p-4">
+
+<!-- 처음으로 가기 버튼 (여백 추가) -->
+<form th:action="@{ / }" method="get" class="w-full flex justify-center mb-6">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
+        처음으로 가기
+    </button>
+</form>
+
+<div id="map" class="w-full"></div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
+    // 서버에서 전달된 선박 좌표
+    var shipLatitude = [[${shipLatitude}]];
+    var shipLongitude = [[${shipLongitude}]];
+    var shipName = "[[${shipName}]]";
+
     // 1. 지도 초기화
-    const map = L.map('map').setView([35.0651, 129.0330], 12); // 부산항 주변 중심 좌표
+    const map = L.map('map').setView([shipLatitude, shipLongitude], 12); // 부산항 주변 중심 좌표
 
     // 2. OpenSeaMap 타일 레이어 설정
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
+    // 선박 위치 마커 추가
+    const shipMarker = L.marker([shipLatitude, shipLongitude]).addTo(map)
+        .bindPopup(`<b>선박: ${shipName}</b><br>위도: ${shipLatitude}<br>경도: ${shipLongitude}`)
+        .openPopup();
 
     // 3. 경로 설정 (예: 부산항에서 인근 선박 경로)
     const route = [
@@ -45,7 +60,7 @@
         // 더블 클릭한 위치의 위도와 경도 출력
         const lat = event.latlng.lat;
         const lng = event.latlng.lng;
-        console.log(`현재재 위치: 위도 ${lat}, 경도 ${lng}`);
+        console.log(`현재 위치: 위도 ${lat}, 경도 ${lng}`);
 
         // 7. 빨간 점 추가 (마커)
         const redIcon = new L.Icon({
