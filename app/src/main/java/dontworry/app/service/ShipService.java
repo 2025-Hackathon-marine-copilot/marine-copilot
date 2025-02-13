@@ -110,4 +110,14 @@ public class ShipService {
         return null;
     }
 
+    public Ship createShip(String IMONumber, String shipName, Double width, Double height){
+        Ship ship = new Ship();
+        ship.setIMONumber(IMONumber);
+        ship.setName(shipName);
+        ship.setWidth(width);
+        ship.setHeight(height);
+        this.shipRepository.save(ship);
+        return ship;
+    }
+
 }
