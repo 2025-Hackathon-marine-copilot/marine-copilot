@@ -1,4 +1,4 @@
-# 지역문제 해결 연합 해커톤 경진대회
+# 지역문제 해결 해커톤
 
 ## 개요
 
@@ -19,36 +19,41 @@
 
   - (발표 시) 자동 접안/운항 시스템과 연계 가능성
 
+- AI 기반 화물 이동 최적화
+
 
 ## 핵심 기술 스택
 
-- 모바일 환경을 지원하는 웹 기반 시스템
-
 - AI 강화학습: PyTorch, Tensorflow
 
-- 서버: Spring Boot
+- Spring Boot
 
-- 클라이언트: OpenSeaMap API / Leaflet.js
+- 인터페이스: OpenSeaMap API / Leaflet.js
 
-- 기타 필요한 라이브러리...
+- 이후 추가
 
 
-## 시스템 아키텍쳐
+## 인터페이스
 
-- 클라이언트-서버 모델
+![인터페이스_자료](https://github.com/nacho2407/marine_copilot/blob/main/etc/img/interface_1.jpg)
+
+
+## 데이터 및 보안
 
 - 데이터 흐름
 
   - [Canva Link](https://www.canva.com/design/DAGe4qcUVzM/9yD7shNlYk-8l3d44qNUvQ/view?utm_content=DAGe4qcUVzM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h13892caa96)
 
-
-## 인터페이스
-
-
-## 데이터 및 보안
+- 이후 추가
 
 
-## 개발 일정 및 역할 분담
+## 개발 일정
+
+- 2025/02/15(토) ~ 2025/02/16(일): 프로토타입 개발
+
+- 이후 추가
 
 
-## 테스트
+## 메모
+
+:)
