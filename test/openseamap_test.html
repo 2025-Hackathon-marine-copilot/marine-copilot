@@ -3,42 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenSeaMap 해양 정보 표시</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <title>그리드 기반 지도</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 600px;"></div>
+    <div id="map"></div>
 
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        // 부산항 근처 위치 (경도 129.0803, 위도 35.0764)
-        var map = L.map('map').setView([35.0764, 129.0803], 14);
+        var map = L.map('map').setView([35.0885, 129.0885], 13); // 지도 초기 위치 설정
 
-        // OpenStreetMap 기본 지도 타일 추가
-        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        // OpenSeaMap 해양 항해 정보(Seamark) 추가
-        var seamarkLayer = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
+        // OpenSeaMap 레이어 추가
+        var osmLayer = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenSeaMap contributors'
         }).addTo(map);
 
-        // 현재 위치 마커 (사용자 지정)
-        var marker = L.marker([35.0764, 129.0803]).addTo(map)
-            .bindPopup("부산항 기준 위치<br>경도: 129.0803<br>위도: 35.0764")
-            .openPopup();
+        var baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-        // 레이어 컨트롤 추가 (기본 지도 & 해양 정보 선택 가능)
-        var baseMaps = {
-            "OpenStreetMap": osmLayer
-        };
+        // 그리드 생성할 좌표 범위
+        var latMin = 35.068818, latMax = 35.107586;
+        var lonMin = 129.059481, lonMax = 129.117633;
 
-        var overlayMaps = {
-            "OpenSeaMap 해양 정보": seamarkLayer
-        };
+        var gridSize = 0.002423; // 정사각형 한 변의 크기 (약 0.005도)
 
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
+        // 그리드 생성
+        for (var lat = latMin; lat < latMax; lat += gridSize) {
+            for (var lon = lonMin; lon < lonMax; lon += gridSize) {
+                var square = [
+                    [lat, lon],
+                    [lat + gridSize, lon],
+                    [lat + gridSize, lon + gridSize],
+                    [lat, lon + gridSize]
+                ];
+                L.polygon(square, { color: 'blue', weight: 1, fillOpacity: 0.1 }).addTo(map);
+            }
+        }
+
+        // 지도 더블 클릭 시 위도, 경도 콘솔에 출력 및 마커 표시
+        map.on('dblclick', function(e) {
+            console.log("위도: " + e.latlng.lat + ", 경도: " + e.latlng.lng);
+            L.marker(e.latlng).addTo(map).bindPopup("위도: " + e.latlng.lat + "<br>경도: " + e.latlng.lng).openPopup();
+        });
     </script>
 </body>
 </html>
