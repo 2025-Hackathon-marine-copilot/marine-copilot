@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>선박 등록</title>
+    <title>🚢 BPA 부산 항만 자동화 시스템</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center h-screen bg-gray-100">
+<body class="flex flex-col items-center justify-center h-screen bg-gray-100">
+
+<!-- 📌 상단 제목 -->
+<h1 class="text-3xl font-bold text-gray-800 mb-8">
+    🚢 BPA 부산 항만 자동화 시스템
+</h1>
+
+<!-- 📌 선박 등록 버튼 -->
 <form th:action="@{/ships/enroll}" method="get">
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-lg shadow-lg transition duration-200">
         선박 등록
     </button>
 </form>
+
 </body>
 </html>
