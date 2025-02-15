@@ -8,7 +8,7 @@ spring:
       maximum-pool-size: 10
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
@@ -17,6 +17,7 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+
 error:
   handling:
     http-status-in-json-response: true

@@ -1,6 +1,6 @@
 package dontworry.app.controller;
 
-import dontworry.app.domain.CurrentShip;
+import dontworry.app.domain.ShipInfo;
 import dontworry.app.model.ShipCreateForm;
 import dontworry.app.model.ShipDTO;
 import dontworry.app.myclass.RandomCoordinateGenerator;
@@ -110,7 +110,7 @@ public class ShipController {
         RandomCoordinateGenerator randomCoordinateGenerator = new RandomCoordinateGenerator();
         double[] randomCoord = randomCoordinateGenerator.getRandomCoordinate();
 
-        CurrentShip currentShip = new CurrentShip(shipCreateForm.getShipName(), randomCoord[0], randomCoord[1]);
+        ShipInfo currentShip = new ShipInfo(shipCreateForm.getIMONumber(), shipCreateForm.getShipName(), shipCreateForm.getWidth(), shipCreateForm.getHeight(), randomCoord[0], randomCoord[1]);
         redirectAttributes.addFlashAttribute("currentShip", currentShip);
 
         return "redirect:/map";

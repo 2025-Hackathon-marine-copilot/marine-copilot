@@ -1,11 +1,15 @@
 package dontworry.app.service;
 
 import dontworry.app.domain.AnchoredShip;
+import dontworry.app.domain.ShipInfo;
 import dontworry.app.domain.Ship;
 import dontworry.app.model.AnchoredShipDTO;
+import dontworry.app.model.ShipDTO;
 import dontworry.app.repos.AnchoredShipRepository;
 import dontworry.app.repos.ShipRepository;
 import dontworry.app.util.NotFoundException;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -16,11 +20,13 @@ public class AnchoredShipService {
 
     private final AnchoredShipRepository anchoredShipRepository;
     private final ShipRepository shipRepository;
+    private final ShipService shipService;
 
     public AnchoredShipService(final AnchoredShipRepository anchoredShipRepository,
-            final ShipRepository shipRepository) {
+            final ShipRepository shipRepository, final ShipService shipService) {
         this.anchoredShipRepository = anchoredShipRepository;
         this.shipRepository = shipRepository;
+        this.shipService = shipService;
     }
 
     public List<AnchoredShipDTO> findAll() {
@@ -28,6 +34,23 @@ public class AnchoredShipService {
         return anchoredShips.stream()
                 .map(anchoredShip -> mapToDTO(anchoredShip, new AnchoredShipDTO()))
                 .toList();
+    }
+
+    public List<ShipInfo> findAllAnchoredShipInfo(){
+        List<AnchoredShip> anchoredShipList = anchoredShipRepository.findAll();
+        List<ShipInfo> shipInfoList = new ArrayList<>();
+        for (AnchoredShip anchoredShip : anchoredShipList) {
+            ShipDTO shipDTO = shipService.get(anchoredShip.getShipSeqId().getShipSeqId());
+            ShipInfo shipInfo = new ShipInfo();
+            shipInfo.setImoNumber(shipDTO.getIMONumber());
+            shipInfo.setName(shipDTO.getName());
+            shipInfo.setWidth(shipDTO.getWidth());
+            shipInfo.setHeight(shipDTO.getHeight());
+            shipInfo.setLat(anchoredShip.getX());
+            shipInfo.setLng(anchoredShip.getY());
+            shipInfoList.add(shipInfo);
+        }
+        return shipInfoList;
     }
 
     public AnchoredShipDTO get(final Long anchoredSeqId) {
