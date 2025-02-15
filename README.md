@@ -24,13 +24,11 @@
 
 ## 핵심 기술 스택
 
-- AI 강화학습: PyTorch, Tensorflow
-
 - Spring Boot
 
-- 인터페이스: OpenSeaMap API / Leaflet.js
+- PyTorch, Tensorflow
 
-- 이후 추가
+- 기타 등등...
 
 
 ## 인터페이스
@@ -38,22 +36,15 @@
 ![인터페이스_자료](https://github.com/nacho2407/marine_copilot/blob/main/etc/img/interface_1.jpg)
 
 
-## 데이터 및 보안
+## 데이터 흐름
 
-- 데이터 흐름
-
-  - [Canva Link](https://www.canva.com/design/DAGe4qcUVzM/9yD7shNlYk-8l3d44qNUvQ/view?utm_content=DAGe4qcUVzM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h13892caa96)
-
-- 이후 추가
-
-
-## 개발 일정
-
-- 2025/02/15(토) ~ 2025/02/16(일): 프로토타입 개발
-
-- 이후 추가
+[Canva Link](https://www.canva.com/design/DAGe4qcUVzM/9yD7shNlYk-8l3d44qNUvQ/view?utm_content=DAGe4qcUVzM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h13892caa96)
 
 
 ## 메모
 
 :)
+
+### 해야할 거
+
+- Javascript에서 C++ 코드를 실행할 수 있는가?
