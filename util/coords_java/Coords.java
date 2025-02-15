@@ -21,7 +21,7 @@ public class Coords
         /**
          * @brief 위도-경도 좌표계를 x-y 좌표계로 변환하는 함수
          */
-        public static Grid coordToGrid(Coord grid)
+        public static Grid coordToGrid(Coord coord)
         {
                 double lat_gap = (coord.lat - MIN_LAT) / SIZE_GRID;
                 double lon_gap = (MAX_LON - coord.lon) / SIZE_GRID;
