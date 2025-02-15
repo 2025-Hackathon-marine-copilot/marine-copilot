@@ -1,14 +1,19 @@
 package dontworry.app.service;
 
 import dontworry.app.domain.Weather;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.net.*;
 import java.io.*;
 
 @Service
 public class PortWeatherService {
+    @Value("${weather.api.key}")
+    private String apiKey;
+
     public Weather getWeatherInfo() {
-        String apiUrl = "https://apihub.kma.go.kr/api/typ01/url/sea_obs.php?tm=&stn=516090&help=0&authKey=a8j-o_bXStqI_qP21yraYg";
+        String apiUrl = "https://apihub.kma.go.kr/api/typ01/url/sea_obs.php?tm=&stn=516090&help=0&authKey=" + apiKey;
         String extractedData = "";
 
         try {
