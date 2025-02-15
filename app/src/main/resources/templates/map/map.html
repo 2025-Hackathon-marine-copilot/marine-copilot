@@ -15,7 +15,7 @@
 <!-- 상단 제목 -->
 <h1 class="text-2xl font-bold mb-4">🚢 BPA 부산 항만 자동화 시스템</h1>
 
-<!-- 📌 목적지 및 선박 ID + 처음으로 가기 버튼 (같은 선상 배치) -->
+<!-- 📌 목적지 및 선박 ID + 처음으로 가기 버튼 + 날씨 버튼 -->
 <div class="w-full flex justify-between items-center mb-6">
     <!-- 목적지 및 선박 ID -->
     <div id="ship-info" class="text-lg font-semibold">
@@ -23,17 +23,26 @@
         🆔 선박 ID: <span id="ship-id">-</span>
     </div>
 
-    <!-- 처음으로 가기 버튼 (오른쪽 정렬) -->
-    <form th:action="@{/}" method="get">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
-            처음으로 가기
+    <!-- 버튼 그룹 -->
+    <div class="flex space-x-4">
+        <!-- 날씨 정보 버튼 -->
+        <button id="weather-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
+            🌊 항만 기상 정보 보기
         </button>
-    </form>
+
+        <!-- 처음으로 가기 버튼 -->
+        <form th:action="@{/}" method="get">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
+                처음으로 가기
+            </button>
+        </form>
+    </div>
 </div>
 
-
+<!-- 지도 영역 -->
 <div id="map" class="w-full"></div>
 
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
@@ -55,6 +64,19 @@
              📍 위치: 위도 ${ship.lat}, 경도 ${ship.lng}`
         );
     }
+
+    // 🌤 날씨 정보 컨트롤 (우측 상단)
+    var weatherControl = L.control({ position: 'topright' });
+
+    weatherControl.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'weather-info bg-white p-3 rounded-lg shadow-lg text-sm');
+        div.style.display = "none"; // 초기에는 숨김
+        div.innerHTML = `<b>🌊 현재 항만 기상 정보</b><br>날씨 정보를 불러오세요.`;
+        return div;
+    };
+
+    weatherControl.addTo(map);
+    var weatherControlDiv = document.querySelector('.weather-info');
 </script>
 
 <script th:inline="javascript">
@@ -93,6 +115,40 @@
         popupAnchor: [0, -15]
     });
     movingShips.forEach(ship => addShipMarker(map, ship, movingShipIcon));
+</script>
+
+<script th:inline="javascript">
+    var weatherInfo = /*[[${weatherInfo}]]*/ null;
+
+    document.getElementById("weather-btn").addEventListener("click", function () {
+        if (weatherInfo && weatherInfo.tm) {
+            // 날씨 정보를 우측 상단에 표시 + ❌ X 버튼 추가
+            weatherControlDiv.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <b>🌊 현재 항만 기상 정보</b>
+                    <button id="close-weather" class="text-red-500 font-bold text-lg">❌</button>
+                </div>
+                ⏰ 관측 시각: ${weatherInfo.tm}<br>
+                🌊 유의 파고: ${weatherInfo.wh}m<br>
+                🌬 풍향: ${weatherInfo.wd}°<br>
+                💨 풍속: ${weatherInfo.ws} m/s<br>
+                🌊 GUST 풍속: ${weatherInfo.wsGst} m/s<br>
+                🌡 해수면 온도: ${weatherInfo.tw}°C<br>
+                🌡 기온: ${weatherInfo.ta}°C<br>
+                🏖 해면 기압: ${weatherInfo.pa} hPa
+            `;
+
+            weatherControlDiv.style.display = "block"; // 날씨 정보 표시
+
+            // ❌ X 버튼 클릭 시 날씨 정보 숨김
+            document.getElementById("close-weather").addEventListener("click", function () {
+                weatherControlDiv.style.display = "none";
+            });
+
+        } else {
+            alert("🌥 기상 정보를 불러올 수 없습니다.");
+        }
+    });
 </script>
 
 </body>
