@@ -27,3 +27,7 @@ error:
       5xx: ERROR
     codes:
       ShipIMONumberUnique: SHIP_IMONUMBER_UNIQUE
+
+weather:
+  api:
+    key: a8j-o_bXStqI_qP21yraYg
