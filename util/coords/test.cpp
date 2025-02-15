@@ -13,7 +13,7 @@ int main(void)
         // {
         //         auto grid = coord_to_grid(coords::Coord{lat, lon});
 
-        //         std::cout << "Result: " << grid->x << ", " << grid->y << std::endl;
+        //         std::cout << "Result: (" << grid->x << ", " << grid->y << ")" << std::endl;
         // }
 
         // Grid to coordination
@@ -27,7 +27,7 @@ int main(void)
         // {
         //         auto coord = grid_to_coord(coords::Grid{x, y});
 
-        //         std::cout << "Result: " << coord->lat << ", " << coord->lon << std::endl;
+        //         std::cout << "Result: (" << coord->lat << ", " << coord->lon << ")" << std::endl;
         // }
 
         // Navigable waters test
@@ -48,16 +48,18 @@ int main(void)
         std::vector<coords::Grid> grids;
         grids.reserve(coords.size());
 
-        for(auto c: coords)
-                grids.push_back(*(coord_to_grid(c)));
-
+        {
+                for(auto c: coords)
+                        grids.push_back(*(coord_to_grid(c)));
+        }
+        
         std::cout << "[";
 
         std::size_t size_grids = grids.size();
         for(int i = 0; i < size_grids - 1; i++)
-                std::cout << "(" << grids[0].x << ", " << grids[0].y << "), ";
+                std::cout << "(" << grids[i].x << ", " << grids[i].y << "), ";
 
-        std::cout << "(" << grids[size_grids - 1].x << ", " << grids[size_grids - 1].y << ")]";
+        std::cout << "(" << grids[size_grids - 1].x << ", " << grids[size_grids - 1].y << ")]" << std::endl;
 
         return 0;
 }
