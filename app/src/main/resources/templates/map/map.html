@@ -215,7 +215,7 @@
             return;
         }
 
-        startPosition = [0, 0];
+        startPosition = [currentShip.lat, currentShip.lng];
 
         fetch("/route/predict", {
             method: "POST",
@@ -224,14 +224,31 @@
         })
             .then(response => response.json())
             .then(data => {
-                console.log("🚢 추천 경로:", data.path);
+                if (!data.route) {
+                    console.error("🚨 경로 데이터가 없습니다.");
+                    return;
+                }
+                console.log("🚢 추천 경로:", data.route);
 
-                // 기존 경로 제거 후 새 경로 추가
-                if (window.routePolyline) {
-                    map.removeLayer(window.routePolyline);
+                // 기존 마커 제거
+                if (window.routeMarkers) {
+                    window.routeMarkers.forEach(marker => map.removeLayer(marker));
                 }
 
-                window.routePolyline = L.polyline(data.path, { color: "green", weight: 4 }).addTo(map);
+                // 🔴 각 좌표마다 빨간 점(마커) 추가
+                window.routeMarkers = [];
+
+                data.route.forEach(coord => {
+                    let marker = L.circleMarker([coord.lon, coord.lat], {
+                        radius: 5,
+                        color: "red",
+                        fillColor: "red",
+                        fillOpacity: 1
+                    }).addTo(map);
+
+                    window.routeMarkers.push(marker);
+                });
+
             })
             .catch(error => console.error("🚨 경로 요청 실패:", error));
     });
