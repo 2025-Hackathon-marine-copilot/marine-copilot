@@ -30,6 +30,11 @@
             🌊 항만 기상 정보 보기
         </button>
 
+        <!-- 📍 경로 안내 버튼 -->
+        <button id="route-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md">
+            📍 경로 안내 보기
+        </button>
+
         <!-- 처음으로 가기 버튼 -->
         <form th:action="@{/}" method="get">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
@@ -176,6 +181,59 @@
         } else {
             alert("🌥 기상 정보를 불러올 수 없습니다.");
         }
+    });
+</script>
+
+<script>
+    let startPosition = null;
+    let goalPosition = null;
+
+    // 🌍 지도 클릭 이벤트 (목적지 선택)
+    map.on("click", function(event) {
+        const lat = event.latlng.lat;
+        const lng = event.latlng.lng;
+        goalPosition = [lat, lng];
+
+        console.log("🟢 목적지 선택됨:", goalPosition);
+
+        // 기존 목적지 마커 제거 후 새로운 목적지 추가
+        if (window.goalMarker) {
+            map.removeLayer(window.goalMarker);
+        }
+        window.goalMarker = L.marker(goalPosition, { icon: L.icon({
+                iconUrl: 'images/flag.png',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -15]
+            }) }).addTo(map).bindPopup("📍 도착 위치");
+    });
+
+    // 📍 경로 안내 버튼 클릭 시 요청
+    document.getElementById("route-btn").addEventListener("click", function () {
+        if (!goalPosition) {
+            alert("📍 도착 위치를 지도에서 클릭해주세요!");
+            return;
+        }
+
+        startPosition = [0, 0];
+
+        fetch("/route/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ start: startPosition, goal: goalPosition })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("🚢 추천 경로:", data.path);
+
+                // 기존 경로 제거 후 새 경로 추가
+                if (window.routePolyline) {
+                    map.removeLayer(window.routePolyline);
+                }
+
+                window.routePolyline = L.polyline(data.path, { color: "green", weight: 4 }).addTo(map);
+            })
+            .catch(error => console.error("🚨 경로 요청 실패:", error));
     });
 </script>
 
