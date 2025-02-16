@@ -1,7 +1,3 @@
-import Coord;
-import Coords;
-import Grid;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -31,19 +27,19 @@ public class Test {
                 for(Coord c: coords)
                         grids.add(Coords.coordToGrid(c));
                 
-                BufferedWriter bs = new BufferedWriter(new OutputStreamWriter(System.out));
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-                bs.write("[");
+                bw.write("[");
 
                 int sizeGrids = grids.size();
                 for(int i = 0; i < sizeGrids - 1; i++)
-                        bs.write("(" + grids.get(i).x + ", " + grids.get(i).y + "), ");
+                        bw.write("(" + grids.get(i).x + ", " + grids.get(i).y + "), ");
 
-                bs.write("(" + grids.get(sizeGrids - 1).x + ", " + grids.get(sizeGrids - 1).y + ")]");
-                bs.newLine();
+                bw.write("(" + grids.get(sizeGrids - 1).x + ", " + grids.get(sizeGrids - 1).y + ")]");
+                bw.newLine();
 
-                bs.flush();
+                bw.flush();
 
-                bs.close();
+                bw.close();
         }
 }

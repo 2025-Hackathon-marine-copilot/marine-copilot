@@ -1,6 +1,3 @@
-import Coord;
-import Grid;
-
 import java.util.ArrayList;
 
 public class Coords
