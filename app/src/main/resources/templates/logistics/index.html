@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>물류 검수</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-4">🚢 BPA 부산 항만 자동화 시스템</h2>
+
+    <!-- 📌 콤보박스와 문구 (게이트 선택) -->
+    <div class="flex justify-center items-center mb-6 space-x-4">
+        <div>
+            <label for="category" class="mr-2 font-semibold">게이트 번호:</label>
+            <select id="category" name="category" class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option value="one">1번 게이트</option>
+                <option value="two">2번 게이트</option>
+                <option value="three">3번 게이트</option>
+                <option value="four">4번 게이트</option>
+            </select>
+        </div>
+        <p class="text-gray-600 text-center">이미지를 업로드하세요.</p>
+    </div>
+
+    <!-- 📌 이미지 업로드 폼 -->
+    <div class="flex flex-col items-center">
+        <label class="font-semibold mb-2 text-lg">📸 이미지 업로드</label>
+
+        <!-- ✅ 중앙 정렬 -->
+        <div class="flex flex-col items-center text-center">
+            <input type="file" name="image" accept="image/*" class="hidden" id="upload1" onchange="previewImage(event, 'preview1')">
+            <label for="upload1" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md shadow-md transition duration-200">
+                이미지 선택
+            </label>
+            <img id="preview1" class="mt-4 w-60 h-60 object-cover rounded-md shadow-md hidden">
+        </div>
+    </div>
+
+    <!-- 📌 업로드 버튼 -->
+    <div class="text-center mt-6">
+        <button onclick="uploadImage()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-md transition duration-200">
+            📤 업로드하기
+        </button>
+    </div>
+
+    <!-- 📌 결과 표시 -->
+    <div id="resultMessage" class="mt-6 text-center text-gray-700"></div>
+</div>
+
+<script>
+    function previewImage(event, previewId) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const img = document.getElementById(previewId);
+            img.src = reader.result;
+            img.classList.remove("hidden");
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function uploadImage() {
+        const fileInput = document.getElementById("upload1").files[0];
+        const resultDiv = document.getElementById("resultMessage");
+        resultDiv.innerHTML = "";  // 결과 초기화
+
+        if (!fileInput) {
+            resultDiv.innerHTML = "<p class='text-red-500 font-semibold'>❌ 이미지를 선택해주세요!</p>";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", fileInput);
+
+        fetch("/upload", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // ✅ OCR 결과 리스트에서 첫 번째 값만 가져오기
+                    const firstResult = data.flask_result?.ocr_results?.[0] || "결과 없음";
+
+                    resultDiv.innerHTML = `<p class='text-green-500 font-semibold'>✅ AI 분석 완료: ${firstResult}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 오류 발생: ${error.message}</p>`;
+            });
+
+    }
+</script>
+</body>
+</html>
