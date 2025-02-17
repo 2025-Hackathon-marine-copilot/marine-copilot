@@ -188,9 +188,14 @@
     });
 </script>
 
-<script>
+<script th:inline="javascript">
     let startPosition = null;
     let goalPosition = null;
+    // 이동 중인 선박의 lat, lng 값만 추출
+    let movingShipCoordinates = movingShips.map(ship => [ship.lat, ship.lng]);
+
+    // 정박 중인 선박의 lat, lng 값만 추출
+    let anchoredShipCoordinates = anchoredShips.map(ship => [ship.lat, ship.lng]);
 
     // 🌍 지도 클릭 이벤트 (목적지 선택)
     map.on("click", function(event) {
@@ -224,7 +229,7 @@
         fetch("/route/predict", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ start: startPosition, goal: goalPosition })
+            body: JSON.stringify({ start: startPosition, goal: goalPosition, movingShip: movingShipCoordinates, anchoredShip: anchoredShipCoordinates })
         })
             .then(response => response.json())
             .then(data => {
