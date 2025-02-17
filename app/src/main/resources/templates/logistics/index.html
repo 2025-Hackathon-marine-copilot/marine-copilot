@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>물류 검수</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="bg-gray-100 p-6">
 <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
@@ -20,6 +21,7 @@
         <div class="flex items-center space-x-4">
             <label for="category" class="mr-2 font-semibold">게이트 번호:</label>
             <select id="category" name="category" class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                <option value="default">--------</option>
                 <option value="one">1번 게이트</option>
                 <option value="two">2번 게이트</option>
                 <option value="three">3번 게이트</option>
@@ -35,7 +37,7 @@
         </form>
     </div>
 
-    <p class="text-gray-600 text-center">이미지를 업로드하세요.</p>
+    <p class="text-gray-600 text-center">사진을 촬영하세요.</p>
     <!-- 📌 사진 촬영 폼 -->
     <div class="flex flex-col items-center">
         <!-- ✅ 중앙 정렬 -->
@@ -60,13 +62,37 @@
 </div>
 
 <script>
+    let selectedImage = ""; // 현재 선택된 이미지 저장
+
+    document.getElementById("category").addEventListener("change", function() {
+        const selectedGate = this.value; // 선택한 게이트 값 가져오기
+
+        if (selectedGate === "one") {
+            selectedImage = "/images/container1.jpg";  // 1번 게이트 선택 시
+        } else if (selectedGate === "two") {
+            selectedImage = "/images/container2.jpg";  // 2번 게이트 선택 시
+        } else if(selectedGate === "three"){
+            selectedImage = "/images/container3.jpg";
+        } else if(selectedGate === "four"){
+            selectedImage = "/images/container4.jpg";
+        } else {
+            selectedImage = "";  // 기타 선택 시 이미지 숨김
+        }
+    });
+
+    // 📌 사진 촬영 버튼 클릭 시 실행
     function showPortImage() {
+        if (!selectedImage) {
+            alert("📍 먼저 게이트를 선택하세요!"); // 게이트 선택 안 했을 경우 경고
+            return;
+        }
+
         const previewImg = document.getElementById("preview1");
-        previewImg.src = "/images/container2.jpg";  // 미리보기 이미지 설정
-        previewImg.classList.remove("hidden");  // 이미지 보이기
-        document.getElementById("category").disabled = true; // 게이트 선택 비활성화
-        uploadImage("/images/container2.jpg");  // 서버 업로드 실행
+        previewImg.src = selectedImage;  // 선택한 이미지 적용
+        previewImg.classList.remove("hidden");  // 이미지 표시
+        uploadImage(selectedImage);  // 서버 업로드 실행
     }
+
 
     function uploadImage(imagePath) {
         const resultDiv = document.getElementById("resultMessage");
@@ -77,37 +103,51 @@
             .then(response => response.blob())  // Blob으로 변환
             .then(blob => {
                 const formData = new FormData();
-                formData.append("image", blob, "container2.jpg");  // Blob을 실제 파일처럼 추가
+                formData.append("image", blob);  // Blob을 실제 파일처럼 추가
 
                 fetch("/upload", {  // Flask 서버 업로드 요청
                     method: "POST",
                     body: formData
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === "success") {
-                            const firstResult = String(data.flask_result?.ocr_results?.[0] || "결과 없음");
-                            resultDiv.innerHTML = `
-                            <p class='text-black-500 font-semibold'>✅ AI 분석 완료</p>
-                            <p class='text-green-500 font-semibold'>OWNER CODE: ${firstResult.slice(0, 4)}</p>
-                            <p class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(4, 10)}</p>
-                            <p class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(10, 11)}</p>
-                            <span class="inline-flex items-center space-x-1 mt-2">
-                                <img src="/images/valid.png" alt="Valid" class="w-5 h-5">
-                                <span class="text-gray-700 font-medium">valid</span>
-                            </span>
-                        `;
-                        } else {
-                            resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
-                        }
+                    .then(response => {
+                        // ✅ 분석 중 메시지 표시 (5초 동안 유지)
+                        resultDiv.innerHTML = `
+        <div class="flex items-center justify-center space-x-2">
+            <span class="text-blue-600 font-semibold text-lg">🔍 AI 분석 중...</span>
+            <div id="spinner" class="w-4 h-4 border-2 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
+        </div>
+    `;
+
+                        const startTime = Date.now(); // 시작 시간 기록
+                        return response.json().then(data => ({ data, startTime })); // 응답 + 시작시간 반환
+                    })
+                    .then(({ data, startTime }) => {
+                        const elapsedTime = Date.now() - startTime; // 서버 응답까지 걸린 시간 계산
+                        const remainingTime = Math.max(2000 - elapsedTime, 0); // 최소 5초 보장
+
+                        setTimeout(() => {
+                            if (data.status === "success") {
+                                const firstResult = String(data.flask_result?.ocr_results?.[0] || "결과 없음");
+                                resultDiv.innerHTML = `
+                <p class='text-black-500 font-semibold'>✅ AI 분석 완료</p>
+                <p class='text-green-500 font-semibold'>OWNER CODE: ${firstResult.slice(0, 4)}</p>
+                <p class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(4, 10)}</p>
+                <p class='text-green-500 font-semibold'>CHECK DIGIT: ${firstResult.slice(10, 11)}</p>
+                <span class="inline-flex items-center space-x-1 mt-2">
+                    <img src="/images/valid.png" alt="Valid" class="w-5 h-5">
+                    <span class="text-gray-700 font-medium">valid</span>
+                </span>
+            `;
+                            } else {
+                                resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
+                            }
+                        }, remainingTime); // 최소 5초 유지
                     })
                     .catch(error => {
                         resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 오류 발생: ${error.message}</p>`;
                     });
+
             })
-            .catch(error => {
-                resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 이미지 가져오기 실패: ${error.message}</p>`;
-            });
     }
 </script>
 
