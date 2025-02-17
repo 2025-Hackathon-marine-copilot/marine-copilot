@@ -13,10 +13,7 @@
 <body class="flex flex-col items-center p-4">
 
 <!-- 상단 제목 -->
-<div class="flex justify-center items-center mb-4">
-    <img src="/images/mainLogo.png" class="w-80 h-auto">
-</div>
-<hr style="margin-bottom: 10px" class="border-t-2 border-gray-300 w-full">
+<h1 class="text-2xl font-bold mb-4">🚢 BPA 부산 항만 자동화 시스템</h1>
 
 <!-- 📌 목적지 및 선박 ID + 처음으로 가기 버튼 + 날씨 버튼 -->
 <div class="w-full flex justify-between items-center mb-6">
@@ -56,82 +53,24 @@
 <script>
     // 지도 초기화
     const map = L.map('map', {
-            center: [35.090625, 129.088557],
-            zoom: 14,
-            doubleClickZoom: false
+        center: [35.090625, 129.088557],
+        zoom: 14,
+        doubleClickZoom: false
     });
 
-    // OpenStreetMap API 기본 레이어
-    let baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+    // OpenSeaMap 타일 레이어 설정
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // OpenSeaMap API 기본 해양 레이어
-    let osmLayer = L.tileLayer('https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenSeaMap contributors'
-    }).addTo(map);
-
-    // OpenSeaMap API 심해 수심 레이어
-    let depthLayer = L.tileLayer.wms('https://osm.franken.de/geoserver/gwc/service/wms', {
-        layers: 'depth_contours',
-        format: 'image/png',
-        attribution: 'Depth Contours from OpenSeaMap'
-    });
-
-    // OpenSeaMap API 항로 및 해양 표식 레이어어
-    let seamarkLayer = L.tileLayer.wms('https://osm.franken.de/geoserver/gwc/service/wms', {
-        layers: 'seamarks',
-        format: 'image/png',
-        attribution: 'Seamarks from OpenSeaMap'
-    });
-
-    // 부산항 해역 좌표
-    let latMin = 35.068818, latMax = 35.110009;
-    let lonMin = 129.057058, lonMax = 129.117633;
-    let gridSize = 0.002423;
-
-    let sizeX = 25;
-    let sizeY = 17;
-
-    // 데카르트 좌표계 표시
-    for (let lat = latMin, i = 0; i < sizeY; lat += gridSize, i++) {
-        for (let lon = lonMin, j = 0; j < sizeX; lon += gridSize, j++) {
-            let square = [
-                [lat, lon],
-                [lat + gridSize, lon],
-                [lat + gridSize, lon + gridSize],
-                [lat, lon + gridSize]
-            ];
-
-            L.polygon(square, {
-                color: 'rgba(0, 0, 255, 0.3)',
-                weight: 0.8
-            }).addTo(map);
-        }
-    }
-
-    // 항해 가능 영역 표시
-    let navigableCoords = [
-        [35.091225, 129.117631],
-        [35.091014, 129.099521],
-        [35.093505, 129.094758],
-        [35.103725, 129.094028],
-        [35.103407, 129.074845],
-        [35.108181, 129.067292],
-        [35.100527, 129.059481],
-        [35.095471, 129.070124],
-        [35.085939, 129.083382],
-        [35.080731, 129.096392],
-        [35.068818, 129.095082],
-        [35.068818, 129.117631]
+    // 4. 경로 설정 (예: 부산항에서 인근 선박 경로)
+    const route = [
+        [35.07960082044156, 129.09467697143558],
+        [35.10095096169263, 129.12197113037112]
     ];
 
-    L.polygon(navigableCoords, {
-        color: 'rgba(0, 255, 0, 0.8)',
-        weight: 0.8,
-        fillColor: 'rgba(0, 255, 0, 0.5)',
-        fillOpacity: 0.2
-    }).addTo(map)
+    // 5. 경로를 지도에 표시
+    const polyline = L.polyline(route, { color: 'blue' }).addTo(map);
 
     // 6. 더블 클릭 이벤트 처리
     map.on('dblclick', function(event) {
@@ -175,33 +114,6 @@
 
     weatherControl.addTo(map);
     var weatherControlDiv = document.querySelector('.weather-info');
-
-    // 입력을 경로 배열로 파싱하는 함수
-    function parseCoordinates(input) {
-        try {
-            return JSON.parse(input);
-        } catch (error) {
-            alert("잘못된 형식입니다. [[위도, 경도], [위도, 경도], ...] 형식으로 입력하세요.");
-
-            return null;
-        }
-    }
-
-    // 경로를 그리는 함수
-    function drawPath() {
-        let inputText = document.getElementById("coordsInput").value;
-        let coordinates = parseCoordinates(inputText);
-
-        if (!coordinates)
-            return;
-
-        L.polyline(coordinates, {
-            color: 'red',
-            weight: 3,
-            opacity: 0.8,
-            smoothFactor: 1
-        }).addTo(map);
-    }
 </script>
 
 <script th:inline="javascript">
