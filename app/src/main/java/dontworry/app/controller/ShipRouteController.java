@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,22 +21,45 @@ public class ShipRouteController {
     private final String flaskApiUrl = "http://localhost:9000/predict";
 
     @PostMapping("/predict")
-    public ResponseEntity<Map<String, Object>> getOptimalShipRoute(@RequestBody Map<String, double[]> requestData) {
+    public ResponseEntity<Map<String, Object>> getOptimalShipRoute(@RequestBody Map<String, Object> requestData) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        double[] startCoords = requestData.get("start");
-        double[] goalCoords = requestData.get("goal");
+        double[] startCoords = ((List<Double>) requestData.get("start")).stream().mapToDouble(Double::doubleValue).toArray();
+        double[] goalCoords = ((List<Double>) requestData.get("goal")).stream().mapToDouble(Double::doubleValue).toArray();
 
         Coord start = new Coord(startCoords[0], startCoords[1]);
         Grid convertedStart = start.toGrid();
         Coord goal = new Coord(goalCoords[0], goalCoords[1]);
         Grid convertedGoal = goal.toGrid();
+
         requestData.put("start", new double[]{convertedStart.getX(), convertedStart.getY()});
         requestData.put("goal", new double[]{convertedGoal.getX(), convertedGoal.getY()});
 
-        HttpEntity<Map<String, double[]>> request = new HttpEntity<>(requestData, headers);
+        // 📌 2. `movingShip` 좌표 변환
+        List<List<Double>> movingShipList = (List<List<Double>>) requestData.get("movingShip");
+        List<double[]> convertedMovingShip = movingShipList.stream()
+                .map(coord -> {
+                    Coord originalCoord = new Coord(coord.get(0), coord.get(1));
+                    Grid convertedCoord = originalCoord.toGrid();
+                    return new double[]{convertedCoord.getX(), convertedCoord.getY()};
+                })
+                .toList();
+        requestData.put("movingShip", convertedMovingShip);
+
+        // 📌 3. `anchoredShip` 좌표 변환
+        List<List<Double>> anchoredShipList = (List<List<Double>>) requestData.get("anchoredShip");
+        List<double[]> convertedAnchoredShip = anchoredShipList.stream()
+                .map(coord -> {
+                    Coord originalCoord = new Coord(coord.get(0), coord.get(1));
+                    Grid convertedCoord = originalCoord.toGrid();
+                    return new double[]{convertedCoord.getX(), convertedCoord.getY()};
+                })
+                .toList();
+        requestData.put("anchoredShip", convertedAnchoredShip);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestData, headers);
         ResponseEntity<Map> response = restTemplate.exchange(flaskApiUrl, HttpMethod.POST, request, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
