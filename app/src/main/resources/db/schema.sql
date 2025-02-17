@@ -51,3 +51,27 @@ values (35.095471, 129.10309500000002, now(),now(), 8);
 
 insert into moving_ships(lat, lng, date_created, last_updated, ship_seq_id_id)
 values (35.100317, 129.08613400000002, now(),now(), 9);
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1,now(), '3', 'SKY GLORY[KR]', 'NSSU', '018443');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '5', 'ATLANTIC EAST[SG]', 'ASSU', '218447');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '7', 'SKY GLORY[KR]', 'NTSU', '218447');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '7', 'ATLANTIC EAST[SG]', 'MASU', '312447');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '6', 'ATLANTIC EAST[SG]', 'APSQ', '518447');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '5', 'SUNNY CLOVER[PA]', 'ASDF', '512321');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '5', 'SUNNY CLOVER[PA]', 'QWER', '712447');
+
+insert into containers(inspection_result, date_created, check_digit, disembarkation_ship_name, owner_code, serial_code)
+values (1, now(), '3', 'SUNNY CLOVER[PA]', 'NSSU', '213217');

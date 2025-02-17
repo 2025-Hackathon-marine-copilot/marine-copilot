@@ -37,6 +37,15 @@
         </form>
     </div>
 
+    <!-- 기록 확인 버튼 (아래쪽 정렬) -->
+    <div class="flex justify-end">
+        <form th:action="@{/containers/showList}" method="get">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
+                기록 확인
+            </button>
+        </form>
+    </div>
+
     <p class="text-gray-600 text-center">사진을 촬영하세요.</p>
     <!-- 📌 사진 촬영 폼 -->
     <div class="flex flex-col items-center">
@@ -138,6 +147,7 @@
                     <span class="text-gray-700 font-medium">valid</span>
                 </span>
             `;
+                                sendAnalysisResult(firstResult);
                             } else {
                                 resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
                             }
@@ -149,6 +159,35 @@
 
             })
     }
+
+    function sendAnalysisResult(firstResult) {
+        // 📌 분석 결과 추출
+        const ownerCode = firstResult.slice(0, 4);
+        const serialCode = firstResult.slice(4, 10);
+        const checkDigit = firstResult.slice(10, 11);
+
+        // 📌 FormData 객체 생성
+        const formData = new FormData();
+        formData.append("ownerCode", ownerCode);
+        formData.append("serialCode", serialCode);
+        formData.append("checkDigit", checkDigit);
+
+        // 📌 fetch()를 사용하여 페이지 새로고침 없이 데이터 전송
+        fetch("/containers/create", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => response.json())  // JSON 응답 처리
+            .then(data => {
+                if (data.status === "success") {
+                    console.log("✅ 컨테이너 정보 저장 완료");
+                } else {
+                    console.error("❌ 서버에서 오류 발생");
+                }
+            })
+            .catch(error => console.error("❌ 네트워크 오류:", error));
+    }
+
 </script>
 
 </body>
