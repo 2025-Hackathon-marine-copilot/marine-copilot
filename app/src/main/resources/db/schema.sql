@@ -16,6 +16,15 @@ values (80, 320, now(), now(),'763456', '[Moving] ship2');
 insert into ships(height, width, date_created, last_updated, imonumber, name)
 values (40, 330, now(), now(),'3233456', '[Moving] ship3');
 
+insert into ships(height, width, date_created, last_updated, imonumber, name)
+values (40, 330, now(), now(),'323123456', '[Obstacle] Obstacle1');
+
+insert into ships(height, width, date_created, last_updated, imonumber, name)
+values (40, 330, now(), now(),'323323456', '[Obstacle] Obstacle2');
+
+insert into ships(height, width, date_created, last_updated, imonumber, name)
+values (40, 330, now(), now(),'323443456', '[Obstacle] Obstacle3');
+
 insert into anchored_ships(x, y, date_created, last_updated, ship_seq_id_id)
 values (35.10356228317691, 129.08856689929965, now(),now(), 1);
 
@@ -34,3 +43,11 @@ values (35.095543724231476, 129.07480716705325, now(),now(), 5);
 insert into moving_ships(lat, lng, date_created, last_updated, ship_seq_id_id)
 values (35.09161096265107, 129.0953636169434, now(),now(), 6);
 
+insert into moving_ships(lat, lng, date_created, last_updated, ship_seq_id_id)
+values (35.093048, 129.08613400000002, now(),now(), 7);
+
+insert into moving_ships(lat, lng, date_created, last_updated, ship_seq_id_id)
+values (35.095471, 129.10309500000002, now(),now(), 8);
+
+insert into moving_ships(lat, lng, date_created, last_updated, ship_seq_id_id)
+values (35.100317, 129.08613400000002, now(),now(), 9);
