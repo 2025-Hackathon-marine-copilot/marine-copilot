@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>컨테이너 목록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-4">📦 컨테이너 목록</h2>
+
+    <!-- 📌 테이블 형식으로 컨테이너 데이터 출력 -->
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead>
+        <tr class="bg-gray-200">
+            <th class="py-2 px-4 border">ID</th>
+            <th class="py-2 px-4 border">OWNER CODE</th>
+            <th class="py-2 px-4 border">SERIAL CODE</th>
+            <th class="py-2 px-4 border">CHECK DIGIT</th>
+            <th class="py-2 px-4 border">선박명</th>
+            <th class="py-2 px-4 border">검수 결과</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 📌 컨테이너 리스트 반복 -->
+        <tr th:each="container : ${containers}" class="text-center">
+            <td class="py-2 px-4 border" th:text="${container.containerId}"></td>
+            <td class="py-2 px-4 border" th:text="${container.ownerCode}"></td>
+            <td class="py-2 px-4 border" th:text="${container.serialCode}"></td>
+            <td class="py-2 px-4 border" th:text="${container.checkDigit}"></td>
+            <td class="py-2 px-4 border" th:text="${container.disembarkationShipName}"></td>
+            <td class="py-2 px-4 border" th:text="${container.inspectionResult}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 📌 뒤로 가기 버튼 -->
+    <div class="text-center mt-6">
+        <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">처음으로 가기</a>
+    </div>
+</div>
+</body>
+</html>
