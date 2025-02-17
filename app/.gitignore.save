@@ -6,7 +6,8 @@ build/
 !**/src/test/**/build/
 application-local.yml
 *.log
-
+.DS_Store
+.idea
 ## IntelliJ IDEA
 .idea
 *.iws
@@ -37,3 +38,7 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
+
+src/main/resources/application.yml
+.env
+

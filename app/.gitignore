@@ -6,7 +6,8 @@ build/
 !**/src/test/**/build/
 application-local.yml
 *.log
-
+.DS_Store
+.idea
 ## IntelliJ IDEA
 .idea
 *.iws
