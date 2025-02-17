@@ -56,6 +56,13 @@
 [Canva Link](https://www.canva.com/design/DAGe4qcUVzM/9yD7shNlYk-8l3d44qNUvQ/view?utm_content=DAGe4qcUVzM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h13892caa96)
 
 
+## 시나리오
+
+### 도선 업무
+
+- 선박 정보 입력 -> 입항 버튼 클릭 -> (작성중)
+
+
 ## 메모
 
 :)
