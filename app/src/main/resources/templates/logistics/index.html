@@ -10,9 +10,10 @@
 <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold text-center mb-4">🚢 BPA 부산 항만 자동화 시스템</h2>
 
-    <!-- 📌 콤보박스와 문구 (게이트 선택) -->
-    <div class="flex justify-center items-center mb-6 space-x-4">
-        <div>
+    <!-- 📌 게이트 선택 + 처음으로 가기 버튼을 한 줄에 배치 -->
+    <div class="flex justify-between items-center mb-6">
+        <!-- 게이트 선택 -->
+        <div class="flex items-center space-x-4">
             <label for="category" class="mr-2 font-semibold">게이트 번호:</label>
             <select id="category" name="category" class="border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500">
                 <option value="one">1번 게이트</option>
@@ -21,9 +22,16 @@
                 <option value="four">4번 게이트</option>
             </select>
         </div>
-        <p class="text-gray-600 text-center">이미지를 업로드하세요.</p>
+
+        <!-- 처음으로 가기 버튼 (오른쪽 정렬) -->
+        <form th:action="@{/}" method="get">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md">
+                처음으로 가기
+            </button>
+        </form>
     </div>
 
+    <p class="text-gray-600 text-center">이미지를 업로드하세요.</p>
     <!-- 📌 이미지 업로드 폼 -->
     <div class="flex flex-col items-center">
         <label class="font-semibold mb-2 text-lg">📸 이미지 업로드</label>
@@ -38,15 +46,16 @@
         </div>
     </div>
 
+    <!-- 📌 결과 표시 -->
+    <div id="resultMessage" class="mt-6 text-center text-gray-700"></div>
+
     <!-- 📌 업로드 버튼 -->
     <div class="text-center mt-6">
-        <button onclick="uploadImage()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-md transition duration-200">
+        <button onclick="uploadImage()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition duration-200">
             📤 업로드하기
         </button>
     </div>
 
-    <!-- 📌 결과 표시 -->
-    <div id="resultMessage" class="mt-6 text-center text-gray-700"></div>
 </div>
 
 <script>
@@ -81,9 +90,19 @@
             .then(data => {
                 if (data.status === "success") {
                     // ✅ OCR 결과 리스트에서 첫 번째 값만 가져오기
-                    const firstResult = data.flask_result?.ocr_results?.[0] || "결과 없음";
+                    const firstResult = String(data.flask_result?.ocr_results?.[0] || "결과 없음");
 
-                    resultDiv.innerHTML = `<p class='text-green-500 font-semibold'>✅ AI 분석 완료: ${firstResult}</p>`;
+                    resultDiv.innerHTML = resultDiv.innerHTML = `
+    <p class='text-black-500 font-semibold'>✅ AI 분석 완료</p>
+    <p class='text-green-500 font-semibold'>OWNER CODE: ${firstResult.slice(0, 4)}</p>
+    <P class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(4, 10)}</P>
+    <P class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(10, 11)}</P>
+     <span class="inline-flex items-center space-x-1 mt-2">
+        <img src="/images/valid.png" alt="Valid" class="w-5 h-5">
+        <span class="text-gray-700 font-medium">valid</span>
+    </div>
+`;
+
                 } else {
                     resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
                 }
