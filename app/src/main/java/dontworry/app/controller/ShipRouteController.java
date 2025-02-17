@@ -1,7 +1,7 @@
 package dontworry.app.controller;
 
 import dontworry.app.util.coords_java.Coord;
-import dontworry.app.util.coords_java.Coords;
+import dontworry.app.util.coords_java.Coordination;
 import dontworry.app.util.coords_java.Grid;
 import org.springframework.http.*;
 import org.springframework.ui.Model;
@@ -31,25 +31,25 @@ public class ShipRouteController {
         double[] goalCoords = requestData.get("goal");
 
         Coord start = new Coord(startCoords[0], startCoords[1]);
-        Grid convertedStart = Coords.coordToGrid(start);
+        Grid convertedStart = start.toGrid();
         Coord goal = new Coord(goalCoords[0], goalCoords[1]);
-        Grid convertedGoal = Coords.coordToGrid(goal);
-        requestData.put("start", new double[]{convertedStart.x, convertedStart.y});
-        requestData.put("goal", new double[]{convertedGoal.x, convertedGoal.y});
+        Grid convertedGoal = goal.toGrid();
+        requestData.put("start", new double[]{convertedStart.getX(), convertedStart.getY()});
+        requestData.put("goal", new double[]{convertedGoal.getX(), convertedGoal.getY()});
 
         HttpEntity<Map<String, double[]>> request = new HttpEntity<>(requestData, headers);
         ResponseEntity<Map> response = restTemplate.exchange(flaskApiUrl, HttpMethod.POST, request, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             ArrayList<ArrayList<Integer>> arr = (ArrayList<ArrayList<Integer>>) response.getBody().get("path");
-            ArrayList<Coord> list = new ArrayList<>();
+            ArrayList<Coord> path = new ArrayList<>();
 
             for(int i = 0; i < arr.size(); i++){
                 Grid grid = new Grid(arr.get(i).get(0), arr.get(i).get(1));
-                Coord coord = Coords.gridToCoord(grid);
-                list.add(coord);
+                Coord coord = grid.toCoord();
+                path.add(coord);
             }
-            response.getBody().put("route", list);
+            response.getBody().put("route", path);
             return ResponseEntity.ok(response.getBody());
 
         } else {
