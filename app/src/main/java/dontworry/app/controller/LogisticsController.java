@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/logistics")
 public class LogisticsController {
-
+    //temp
     @GetMapping("/inspection")
     public String index(){
         return "logistics/index";
