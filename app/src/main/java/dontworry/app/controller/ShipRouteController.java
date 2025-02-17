@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("route")
 public class ShipRouteController {
-    private final String flaskApiUrl = "http://localhost:9000/predict";
+    private final String flaskApiUrl = "http://localhost:9200/predict";
 
     @PostMapping("/predict")
     public ResponseEntity<Map<String, Object>> getOptimalShipRoute(@RequestBody Map<String, Object> requestData) {

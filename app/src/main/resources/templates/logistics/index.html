@@ -36,15 +36,12 @@
     </div>
 
     <p class="text-gray-600 text-center">이미지를 업로드하세요.</p>
-    <!-- 📌 이미지 업로드 폼 -->
+    <!-- 📌 사진 촬영 폼 -->
     <div class="flex flex-col items-center">
-        <label class="font-semibold mb-2 text-lg">📸 이미지 업로드</label>
-
         <!-- ✅ 중앙 정렬 -->
         <div class="flex flex-col items-center text-center">
-            <input type="file" name="image" accept="image/*" class="hidden" id="upload1" onchange="previewImage(event, 'preview1')">
-            <label for="upload1" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md shadow-md transition duration-200">
-                이미지 선택
+            <label onclick="showPortImage()" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md shadow-md transition duration-200">
+                사진 촬영
             </label>
             <img id="preview1" class="mt-4 w-60 h-60 object-cover rounded-md shadow-md hidden">
         </div>
@@ -54,7 +51,7 @@
     <div id="resultMessage" class="mt-6 text-center text-gray-700"></div>
 
     <!-- 📌 업로드 버튼 -->
-    <div class="text-center mt-6">
+    <div class="text-center mt-6 hidden">
         <button onclick="uploadImage()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition duration-200">
             📤 업로드하기
         </button>
@@ -63,59 +60,56 @@
 </div>
 
 <script>
-    function previewImage(event, previewId) {
-        const reader = new FileReader();
-        reader.onload = function(){
-            const img = document.getElementById(previewId);
-            img.src = reader.result;
-            img.classList.remove("hidden");
-        };
-        reader.readAsDataURL(event.target.files[0]);
+    function showPortImage() {
+        const previewImg = document.getElementById("preview1");
+        previewImg.src = "/images/container2.jpg";  // 미리보기 이미지 설정
+        previewImg.classList.remove("hidden");  // 이미지 보이기
+        document.getElementById("category").disabled = true; // 게이트 선택 비활성화
+        uploadImage("/images/container2.jpg");  // 서버 업로드 실행
     }
 
-    function uploadImage() {
-        const fileInput = document.getElementById("upload1").files[0];
+    function uploadImage(imagePath) {
         const resultDiv = document.getElementById("resultMessage");
         resultDiv.innerHTML = "";  // 결과 초기화
 
-        if (!fileInput) {
-            resultDiv.innerHTML = "<p class='text-red-500 font-semibold'>❌ 이미지를 선택해주세요!</p>";
-            return;
-        }
+        // ✅ `container1.jpg`를 Blob으로 변환 후 서버 업로드
+        fetch(imagePath)
+            .then(response => response.blob())  // Blob으로 변환
+            .then(blob => {
+                const formData = new FormData();
+                formData.append("image", blob, "container2.jpg");  // Blob을 실제 파일처럼 추가
 
-        const formData = new FormData();
-        formData.append("image", fileInput);
-
-        fetch("/upload", {
-            method: "POST",
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    // ✅ OCR 결과 리스트에서 첫 번째 값만 가져오기
-                    const firstResult = String(data.flask_result?.ocr_results?.[0] || "결과 없음");
-
-                    resultDiv.innerHTML = resultDiv.innerHTML = `
-    <p class='text-black-500 font-semibold'>✅ AI 분석 완료</p>
-    <p class='text-green-500 font-semibold'>OWNER CODE: ${firstResult.slice(0, 4)}</p>
-    <P class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(4, 10)}</P>
-    <P class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(10, 11)}</P>
-     <span class="inline-flex items-center space-x-1 mt-2">
-        <img src="/images/valid.png" alt="Valid" class="w-5 h-5">
-        <span class="text-gray-700 font-medium">valid</span>
-    </div>
-`;
-
-                } else {
-                    resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
-                }
+                fetch("/upload", {  // Flask 서버 업로드 요청
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            const firstResult = String(data.flask_result?.ocr_results?.[0] || "결과 없음");
+                            resultDiv.innerHTML = `
+                            <p class='text-black-500 font-semibold'>✅ AI 분석 완료</p>
+                            <p class='text-green-500 font-semibold'>OWNER CODE: ${firstResult.slice(0, 4)}</p>
+                            <p class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(4, 10)}</p>
+                            <p class='text-green-500 font-semibold'>SERIAL CODE: ${firstResult.slice(10, 11)}</p>
+                            <span class="inline-flex items-center space-x-1 mt-2">
+                                <img src="/images/valid.png" alt="Valid" class="w-5 h-5">
+                                <span class="text-gray-700 font-medium">valid</span>
+                            </span>
+                        `;
+                        } else {
+                            resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 업로드 실패: ${data.message}</p>`;
+                        }
+                    })
+                    .catch(error => {
+                        resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 오류 발생: ${error.message}</p>`;
+                    });
             })
             .catch(error => {
-                resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 오류 발생: ${error.message}</p>`;
+                resultDiv.innerHTML = `<p class='text-red-500 font-semibold'>❌ 이미지 가져오기 실패: ${error.message}</p>`;
             });
-
     }
 </script>
+
 </body>
 </html>
