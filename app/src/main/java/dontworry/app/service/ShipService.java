@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ShipService {
-
+    //temp
     private final ShipRepository shipRepository;
     private final AnchoredShipRepository anchoredShipRepository;
     private final DepartureShipRepository departureShipRepository;
