@@ -14,6 +14,6 @@ public class RandomCoordinateGenerator {
         double randomLat = (1 - t) * lat1 + t * lat2;
         double randomLng = (1 - t) * lng1 + t * lng2;
 
-        return new double[]{randomLat, randomLng};
+        return new double[]{35.06810151572369, 129.11759376525882};
     }
 }

@@ -336,7 +336,7 @@
                 window.routeMarkers = [];
 
                 data.route.forEach(coord => {
-                    let marker = L.circleMarker([coord.lon, coord.lat], {
+                    let marker = L.circleMarker([coord.lat, coord.lon], {
                         radius: 5,
                         color: "red",
                         fillColor: "red",
