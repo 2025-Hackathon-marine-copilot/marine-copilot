@@ -52,7 +52,11 @@
 
 <script>
     // 지도 초기화
-    const map = L.map('map');
+    const map = L.map('map', {
+            center: [35.090625, 129.088557],
+            zoom: 14,
+            doubleClickZoom: false
+    });
 
     // OpenSeaMap 타일 레이어 설정
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
