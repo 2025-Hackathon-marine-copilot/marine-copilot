@@ -61,7 +61,8 @@
 ### 도선 업무
 
 - 선박 정보 입력 -> 입항 버튼 클릭 -> (작성중)
-
+## 영상
+(https://drive.google.com/file/d/1O0CY3Gfn5-CmzHFKglbSnzosACxRiukL/view?usp=drive_link)
 
 ## 메모
 
